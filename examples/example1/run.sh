@@ -19,7 +19,7 @@ mkdir outputs/
 # set of default model parameters listed in the file 'hotspot.config'
 # and gather the steady state temperatures onto a file. This is done by:
  ../../hotspot -c example.config -f ev6.flp -p gcc.ptrace -materials_file example.materials -model_type block -steady_file outputs/gcc.steady -o outputs/gcc.ttrace
-
+cp outputs/gcc.steady outputs/gcc_p100.steady
 # Now, 'gcc.ttrace' does contain a thermal trace but the initial
 # temperatures that were used to generate it were default constant
 # values. These might not be representative if the simulation is not
@@ -28,8 +28,10 @@ mkdir outputs/
 # temperatures are.  So, we now use the steady state temperatures
 # produced as the set of initial temperatures for the next 'true' run:
 cp outputs/gcc.steady gcc.init
-../../hotspot -c example.config -init_file gcc.init -f ev6.flp -p gcc.ptrace -materials_file example.materials -model_type block -o outputs/gcc.ttrace
+cp gcc.ptrace gcc_p100.ptrace
 
+../../hotspot -c example.config -init_file gcc.init -f ev6.flp -p gcc.ptrace -materials_file example.materials -model_type block -o outputs/gcc.ttrace
+cp outputs/gcc.ttrace outputs/gcc_p100.ttrace
 # Note that the '-o <file>' command line flag is optional. Omitting it
 # makes HotSpot compute the steady state temperatures directly without
 # going through the transient simulation, thereby making the run faster.
@@ -48,3 +50,10 @@ cp outputs/gcc.steady gcc.init
 # may be provided in a file (e.g. 'package.config'). An example of using the
 # package model is given by:
 #../../hotspot -c example.config -f ev6.flp -p gcc.ptrace -package_model_used 1 -package_config_file package.config -steady_file outputs/gcc_detailed_package.steady
+
+
+# Run for the task1 workload
+# With the power scale factor of 0.8 and 1.2 respectively
+# using the initial temperatures from previous steady state run
+ ../../hotspot -c example.config -init_file gcc.init -f ev6.flp -p gcc_p80.ptrace -materials_file example.materials -model_type block -steady_file outputs/gcc_p80.steady -o outputs/gcc_p80.ttrace
+ ../../hotspot -c example.config -init_file gcc.init -f ev6.flp -p gcc_p120.ptrace -materials_file example.materials -model_type block -steady_file outputs/gcc_p120.steady -o outputs/gcc_p120.ttrace

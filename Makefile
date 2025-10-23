@@ -13,15 +13,16 @@ SUPERLU = 0
 endif
 
 ifeq ($(SUPERLU), 1)
-#SuperLUroot	= /usr/lib/x86_64-linux-gnu
+SuperLUroot	= /fact_home/ruyisong/Tool/superlu/install/lib64 
 BLASLIB    	= -lblas
 SUPERLULIB 	= -lsuperlu
-SLU_HEADER  = /usr/include/superlu/
+#SLU_HEADER  = /usr/include/superlu/
+SLU_HEADER  = /fact_home/ruyisong/Tool/superlu/install/include 
 
 MATHACCEL	= none
-INCDIR		= $(SLU_HEADER)
-LIBDIR		=
-LIBS  		= -lm $(BLASLIB) $(SUPERLULIB)
+INCDIR		= $(SLU_HEADER) 
+LIBDIR		= $(SuperLUroot)
+LIBS  		= -lm $(SUPERLULIB) $(BLASLIB)
 EXTRAFLAGS	=
 else
 # default - no math acceleration
