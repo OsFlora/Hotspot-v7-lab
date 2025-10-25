@@ -46,13 +46,14 @@ python3 ../../scripts/grid_thermal_map.py floorplan1.flp outputs/3d_grid_layer0.
 python3 custom_grid_thermal_map.py floorplan1.flp outputs/3d_grid_layer0.grid.steady 64 64 50 110 outputs/layer0_heatmap_celsius.png
 
 python3 ../../scripts/grid_thermal_map.py floorplan2.flp outputs/3d_grid_layer2.grid.steady 64 64 outputs/layer2_heatmap.png
-python3 custom_grid_thermal_map.py floorplan2.flp outputs/3d_grid_layer2.grid.steady 64 64 50 110 outputs/layer2_heatmap_c
+python3 custom_grid_thermal_map.py floorplan2.flp outputs/3d_grid_layer2.grid.steady 64 64 50 110 outputs/layer2_heatmap_celsius.png
 
 # Compare with 2D simulation (Grid without detailed 3D)
 # The result is printed in termal
 cd $HOTSPOT/examples/example1
-../../hotspot -c example.config -f ev6.flp -p gcc.ptrace -materials_file example.materials -model_type grid -grid_steady_file outputs/2d_grid.steady
+../../hotspot -c example.config -f ev6.flp -p gcc.ptrace -materials_file example.materials -model_type grid -steady_file outputs/2d_grid.steady
 python3 $HOTSPOT/examples/example3/extract_peak_temp.py outputs/2d_grid.steady
 
 cd $HOTSPOT/examples/example3
 python3 $HOTSPOT/examples/example3/extract_peak_temp.py outputs/3d_steady.steady
+
