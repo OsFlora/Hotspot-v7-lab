@@ -23,7 +23,6 @@ mkdir outputs
 # in 'example.lcf'. Note that the floorplan files of all layers are specified
 # in the LCF instead of via the command line
 ../../hotspot -c example.config -p example.ptrace -grid_layer_file example.lcf -materials_file example.materials -model_type grid -detailed_3D on -steady_file outputs/example.steady -grid_steady_file outputs/example.grid.steady
-
 # Copy steady-state results over to initial temperatures
 cp outputs/example.steady example.init
 
@@ -34,3 +33,26 @@ cp outputs/example.steady example.init
 ../../scripts/split_grid_steady.py outputs/example.grid.steady 6 64 64
 ../../scripts/grid_thermal_map.py floorplan2.flp outputs/example_layer2.grid.steady 64 64 outputs/layer2.png
 ../../scripts/grid_thermal_map.pl floorplan2.flp outputs/example_layer2.grid.steady 64 64 > outputs/layer2.svg
+
+# Task3
+# 3D stacking simulation (Grid + detailed 3D)
+../../hotspot -c example.config -p example.ptrace -grid_layer_file example.lcf -materials_file example.materials -model_type grid -detailed_3D on -steady_file outputs/3d_steady.steady -grid_steady_file outputs/3d_grid.steady
+
+# Split per-layer temperature (assuming 6 layers; adjust from .lcf)
+python3 ../../scripts/split_grid_steady.py outputs/3d_grid.steady 6 64 64
+
+# Visualize the selected layers
+python3 ../../scripts/grid_thermal_map.py floorplan1.flp outputs/3d_grid_layer0.grid.steady 64 64 outputs/layer0_heatmap.png
+python3 custom_grid_thermal_map.py floorplan1.flp outputs/3d_grid_layer0.grid.steady 64 64 50 110 outputs/layer0_heatmap_celsius.png
+
+python3 ../../scripts/grid_thermal_map.py floorplan2.flp outputs/3d_grid_layer2.grid.steady 64 64 outputs/layer2_heatmap.png
+python3 custom_grid_thermal_map.py floorplan2.flp outputs/3d_grid_layer2.grid.steady 64 64 50 110 outputs/layer2_heatmap_c
+
+# Compare with 2D simulation (Grid without detailed 3D)
+# The result is printed in termal
+cd $HOTSPOT/examples/example1
+../../hotspot -c example.config -f ev6.flp -p gcc.ptrace -materials_file example.materials -model_type grid -grid_steady_file outputs/2d_grid.steady
+python3 $HOTSPOT/examples/example3/extract_peak_temp.py outputs/2d_grid.steady
+
+cd $HOTSPOT/examples/example3
+python3 $HOTSPOT/examples/example3/extract_peak_temp.py outputs/3d_steady.steady
